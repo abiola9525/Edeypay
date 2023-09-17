@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Payment and Withdrawal History{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    {% if messages %}
+          <div class="alert alert-success">
+            <ul>
+              {% for message in messages %}
+              <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+    <!-- Payment History Toggle Button -->
+    <button class="btn btn-primary mb-2" type="button" data-toggle="collapse" data-target="#paymentHistory" aria-expanded="true" aria-controls="paymentHistory">
+        Payment History
+    </button>
+    
+    <!-- Payment History Table -->
+    <div class="collapse show" id="paymentHistory">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Amount</th>
+                    <th>Reference</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for history in historys %}
+                <tr>
+                    <td>{{ history.amount }}</td>
+                    <td>{{ history.reference }}</td>
+                    <td>{{ history.timestamp }}</td>
+                    <td>
+                        {% if history.status == False %}
+                        <span style="color:red;"><b>&#x2717;</b></span>
+                        {% elif history.status == True %}
+                        <span style="color:green;"><b>&#x2713;</b></span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Withdrawal History Toggle Button -->
+    <button class="btn btn-primary mb-2" type="button" data-toggle="collapse" data-target="#withdrawalHistory" aria-expanded="false" aria-controls="withdrawalHistory">
+        Withdrawal History
+    </button>
+    
+    <!-- Withdrawal History Table -->
+    <div class="collapse" id="withdrawalHistory">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Withdrawal Amount</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for withdrawal in withdrawals %}
+                <tr>
+                    <td>{{ withdrawal.amount }}</td>
+                    <td>{{ withdrawal.timestamp }}</td>
+                    <td>
+                        {% if withdrawal.status == False %}
+                        <span style="color:red;"><b>&#x2717;</b></span>
+                        {% elif withdrawal.status == True %}
+                        <span style="color:green;"><b>&#x2713;</b></span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
