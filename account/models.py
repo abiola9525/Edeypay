@@ -4,6 +4,7 @@ from django.conf import settings
 from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from rest_framework.authtoken.models import Token
+from PIL import Image
 # Create your models here.
 
 class UserManager(BaseUserManager):
@@ -44,12 +45,12 @@ class User(AbstractUser):
     gender = models.CharField(choices=choices, max_length=255)
     phone = models.CharField(max_length=50, blank=True, null=True)
     address = models.CharField(max_length=50, blank=True, null=True)
-    date_of_birth = models.DateField(null=True, blank=True)
+    age = models.IntegerField()
     bank_name = models.CharField(max_length=50, blank=True, null=True)
     account_number = models.CharField(max_length=10, blank=True, null=True)
     account_name = models.CharField(max_length=50, blank=True, null=True)
     account_balance = models.FloatField(default=0.0)
-    image = models.ImageField(upload_to='profile/', blank=True, null=True)
+    image = models.ImageField(upload_to='profile/', default='profile/default.png',blank=True, null=True)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
@@ -65,7 +66,7 @@ class User(AbstractUser):
 
     # EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'phone', 'address', 'gender',]
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'phone', 'age','gender',]
 
     def __str__(self):
         return self.email

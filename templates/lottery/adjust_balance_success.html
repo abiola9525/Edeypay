@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center">Balance Adjustment Successful</h2>
+  <p>Your account balance has been updated to reflect your winnings.</p>
+  <a href="{% url 'lottery:ticket_history' %}" class="btn btn-primary">View Ticket History</a>
+</div>
+{% endblock %}

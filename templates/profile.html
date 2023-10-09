@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawsom-all.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style1.css' %}" />
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid overcover">
+        <div class="container profile-box">
+            
+            <div id="about" class="home row">
+                <div class="image-box">
+                    {% if user.image %}
+                        <img src="{{ user.image.url }}" alt="">
+                    {% else %}
+                        <img src="{% static 'img/default.png' %}" alt="Default Image">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="basic-detail row">
+                <div class="col-md-8 detail-col">
+                    <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+                    <p>{{ user.email }}</p>
+                    <div class="btn-cover">
+                       <a href="{% url 'edit_profile' %}"> <button class="btn btn-success">Edit Profile</button></a>
+                        
+                       {% if user.is_admin %}
+                       <a href="{% url 'least_drawn_numbers' %}"><button class="btn btn-success">View Least Number</button></a>
+                       {% else %}
+                       {% endif %}
+                       
+                    </div>
+                </div>
+
+            </div>
+
+
+            <section id="profile" class="home-dat">
+                <div class="row no-margin home-det">
+                    <div class="col-md-12 home-dat">
+                        <div class="jumbo-address">
+                            <div class="row no-margin">
+                                <div class="col-lg-6 no-padding">
+                                    <table class="addrss-list">
+                                        <tbody>
+                                            <tr>
+                                                <th>Gender</th>
+                                                <td>{{ user.gender }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Mobile No</th>
+                                                <td>{{ user.phone }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Address</th>
+                                                <td>{{ user.address }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Age</th>
+                                                <td>{{ user.age }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="col-lg-6 no-padding">
+                                    <table class="addrss-list">
+                                        <tbody>
+                                            <tr>
+                                                <th>Bank Name</th>
+                                                <td>{{ user.bank_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Account Number</th>
+                                                <td>{{ user.account_number }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Account Name</th>
+                                                <td>{{ user.account_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Languages</th>
+                                                <td>English,French,Germany</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
+{% endblock %}

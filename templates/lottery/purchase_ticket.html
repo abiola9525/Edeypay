@@ -1,0 +1,134 @@
+<!-- purchase_ticket.html in 'lottery' app's templates/lottery directory -->
+{% extends 'base.html' %}
+{% block head %}
+<style>
+  #amount_to_win {
+    color: #333; /* Text color (adjust as needed) */
+    font-weight: bold; /* Make the text bold (adjust as needed) */
+    margin-top: 10px; /* Add some space between the input and the amount to win */
+  }
+</style>
+
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title text-center text-capitalize text">Play the Lottery</h2>
+            <form method="post" id="purchaseForm">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="number1">Enter First Number:</label>
+                <input type="number" id="number1" name="number1" min="1" max="77" required>
+                <!-- Other form fields -->
+              </div>
+              <div class="form-group">
+                <label for="number2">Enter Second Number:</label>
+                <input type="number" id="number2" name="number2" min="1" max="77" required>
+                <!-- Other form fields -->
+              </div>
+              
+              <div class="form-group">
+                <label for="amount_played">Amount Played:</label>
+                <input type="number" id="amount_played" name="amount_played" min="200" required>
+              </div>
+              <p id="amount_to_win">Amount to Win: $0</p>
+              <div class="form-group">
+                <label for="draw_id">Select a Draw:</label>
+                <select id="draw_id" name="draw_id">
+                  {% for draw in draws %}
+                    <option value="{{ draw.pk }}">{{ draw.name }} - {{ draw.draw_date }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <input class="btn-primary m-3 p-2" type="submit" value="Purchase Ticket">
+              </div>
+            </form>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal -->
+<!-- Modal for Purchase Confirmation -->
+<div class="modal fade" id="purchaseConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="purchaseConfirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="purchaseConfirmationModalLabel">Purchase Confirmation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to purchase a ticket for $<span id="purchaseAmount"></span>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" id="confirmPurchase">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}
+{% block scripts %}
+<script>
+  // Function to update the amount to win
+  function updateAmountToWin() {
+    const amountPlayed = parseFloat(document.getElementById('amount_played').value);
+    if (isNaN(amountPlayed) || amountPlayed === 0) {
+      document.getElementById('amount_to_win').textContent = 'Amount to Win: NGN 0';
+    } else {
+      const amountToWin = amountPlayed * 20; // Adjust the multiplier as needed
+      document.getElementById('amount_to_win').textContent = `Amount to Win: NGN ${amountToWin.toFixed(2)}`;
+    }
+  }
+
+  // Add an event listener to the amount_played input field
+  document.getElementById('amount_played').addEventListener('input', updateAmountToWin);
+  
+  // Call the function initially to handle any default values
+  updateAmountToWin();
+</script>   
+
+<script>
+  // Function to update the amount to win
+  function updateAmountToWin() {
+    const amountPlayed = parseFloat(document.getElementById('amount_played').value);
+    if (isNaN(amountPlayed) || amountPlayed === 0) {
+      document.getElementById('amount_to_win').textContent = 'Amount to Win: $0';
+    } else {
+      const amountToWin = amountPlayed * 20; // Adjust the multiplier as needed
+      document.getElementById('amount_to_win').textContent = `Amount to Win: $${amountToWin.toFixed(2)}`;
+    }
+  }
+
+  // Add an event listener to the amount_played input field
+  document.getElementById('amount_played').addEventListener('input', updateAmountToWin);
+
+  // Show the modal when the form is submitted
+  document.getElementById('purchaseForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // Prevent the form from submitting
+    const amountPlayed = parseFloat(document.getElementById('amount_played').value);
+    if (!isNaN(amountPlayed) && amountPlayed > 0) {
+      // Update the modal content with the purchase amount
+      document.getElementById('purchaseAmount').textContent = amountPlayed.toFixed(2);
+      $('#purchaseConfirmationModal').modal('show'); // Show the modal
+    }
+  });
+
+  // Handle the "Yes" button click in the modal
+  document.getElementById('confirmPurchase').addEventListener('click', function () {
+    // Submit the form when confirmed
+    document.getElementById('purchaseForm').submit();
+  });
+</script>
+{% endblock %}

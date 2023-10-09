@@ -1,0 +1,24 @@
+{% extends 'base.html' %}  <!-- Extend your base template if you have one -->
+
+{% block content %}
+<div class="container-fluid overcover">
+    <div class="container profile-box">
+        <div id="about" class="home row">
+            <!-- ... Profile image and basic details ... -->
+        </div>
+
+        <section id="edit-profile" class="home-dat">
+            <div class="row no-margin home-det">
+                <div class="col-md-12 home-dat">
+                    <h2>Edit Profile</h2>
+                    <form method="post" id="edit-profile-form" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #1E90FF, #FFD700);
+
+      }   
+      /* Hero Section */
+      .hero {
+          background: linear-gradient(to bottom, #FFD700, #1E90FF);
+          color: #fff;
+          padding: 80px 0;
+          text-align: center;
+      }
+  
+      .hero h1 {
+          font-size: 2.5rem;
+          margin-bottom: 20px;
+      }
+  
+      .hero p {
+          font-size: 1.1rem;
+          margin-bottom: 20px;
+      }
+  
+      /* How to Play Section */
+      .how-to-play {
+          padding: 80px 0;
+      }
+  
+      .how-to-play h2 {
+          font-size: 2rem;
+          margin-bottom: 40px;
+      }
+  
+      .card {
+          border: none;
+          margin-bottom: 30px;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          transition: transform 0.3s ease;
+      }
+  
+      .card:hover {
+          transform: translateY(-5px);
+      }
+  
+      .card-title {
+          font-size: 1.25rem;
+          font-weight: bold;
+      }
+  
+      /* Recent Winners Section */
+      .recent-winners h2 {
+          font-size: 2rem;
+          margin-bottom: 40px;
+      }
+  
+      /* Call to Action Section */
+      .cta {
+          background-color: #FFD700;
+          padding: 40px 0;
+      }
+  
+      .cta h3 {
+          font-size: 2rem;
+          margin-bottom: 20px;
+      }
+  
+      /* Footer */
+      .footer {
+          padding: 20px 0;
+          text-align: center;
+      }
+  
+      .footer p {
+          margin: 0;
+      } 
+{% endblock %}
+
+{% block content %}
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="animated fadeInDown">Welcome to Edeypay</h1>
+                    <p>Edeypay is the easiest and most convenient way to play the lottery. Simply create an account, choose your numbers, and click play. We'll take care of the rest! And if you win, we'll pay you out immediately.</p>
+                    {% if user.is_authenticated %}
+                    {% else %}
+                    <p>Sign up today and start winning!</p>
+                    <a href="{% url 'signup' %}" class="btn btn-primary btn-lg animated fadeInUp">Get Started</a>
+                    {% endif %}
+                </div>
+                <div class="col-lg-6">
+                    <img src="lottery-ticket.png" alt="Lottery Ticket" class="img-fluid animated fadeInRight">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Play Section -->
+    <section class="how-to-play bg-light">
+        <div class="container">
+            <h2 class="text-center">How to Play</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card animated pulse">
+                        <img src="icon1.png" alt="Icon 1" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">Buy Tickets</h5>
+                            <p class="card-text">Purchase lottery tickets for your chance to win big prizes.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card animated pulse">
+                        <img src="icon2.png" alt="Icon 2" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">Choose Numbers</h5>
+                            <p class="card-text">Select your lucky numbers or use Quick Pick for random numbers.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card animated pulse">
+                        <img src="icon3.png" alt="Icon 3" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">Win Prizes</h5>
+                            <p class="card-text">Match your numbers to the drawn numbers and win amazing prizes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Winners Section -->
+            <div class="recent-winners">
+                <h2 class="text-center">Recent Winners</h2>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">John Doe</h5>
+                                <p class="card-text">Won $1 million on the Edeypay lottery!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Jane Smith</h5>
+                                <p class="card-text">Won $500,000 on the Edeypay lottery!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Mike Jones</h5>
+                                <p class="card-text">Won $100,000 on the Edeypay lottery!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if user.is_authenticated %}
+    {% else %}
+    <!-- Call to Action Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="text-center">Play the Edeypay lottery today and start winning!</h3>
+                    <a href="{% url 'signup' %}" class="btn btn-primary btn-lg btn-block">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white">
+        <div class="container">
+            <p>&copy; 2023 Edeypay Lottery. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Add Bootstrap JS CDN Links -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}
+
+
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Next Result in:</h2>
+  <div id="countdown">
+    <span id="hours">{{ hours_remaining }}</span> hours
+    <span id="minutes">{{ minutes_remaining }}</span> minutes
+    <span id="seconds">{{ seconds_remaining }}</span> seconds
+  </div>
+</div>
+
+<h2 class="mt-5">Lottery Results</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Ticket Numbers</th>
+      <th scope="col">Amount Played</th>
+      <th scope="col">Result</th>
+      <th scope="col">Status</th>
+      <th scope="col">Result Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for result in results %}
+    <tr>
+      <td>{{ result.numbers }}</td>
+      <td>{{ result.amount_played }}</td>
+      <td>
+        {% if result.result %}
+        {{ result.result|join:', ' }}
+        {% else %}
+        Result Pending
+        {% endif %}
+      </td>
+      <td>
+        {% if result.result %}
+        {% if result.numbers.0 in result.result or result.numbers.1 in result.result %}
+        <span class="text-success">Won</span>
+        {% else %}
+        <span class="text-danger">Lost</span>
+        {% endif %}
+        {% else %}
+        Pending
+        {% endif %}
+      </td>
+      <td>{{ result.result_time|date:"Y-m-d H:i:s" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script>
+  // Function to update the countdown
+  function updateCountdown() {
+    var hoursElem = document.getElementById('hours');
+    var minutesElem = document.getElementById('minutes');
+    var secondsElem = document.getElementById('seconds');
+    
+    // Decrease the seconds remaining
+    seconds_remaining--;
+    
+    // Adjust minutes and hours if necessary
+    if (seconds_remaining < 0) {
+      seconds_remaining = 59;
+      minutes_remaining--;
+      if (minutes_remaining < 0) {
+        minutes_remaining = 59;
+        hours_remaining--;
+      }
+    }
+
+    // Update the HTML elements
+    hoursElem.textContent = hours_remaining;
+    minutesElem.textContent = minutes_remaining;
+    secondsElem.textContent = seconds_remaining;
+  }
+
+  // Update the countdown every second (1000 milliseconds)
+  var hours_remaining = {{ hours_remaining }};
+  var minutes_remaining = {{ minutes_remaining }};
+  var seconds_remaining = {{ seconds_remaining }};
+  setInterval(updateCountdown, 1000);
+</script>
+
+
+
+{% endblock %}

@@ -1,0 +1,22 @@
+
+
+<!-- lottery/view_results.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>View Lottery Results</h2>
+    <h3>Active Games:</h3>
+    <ul>
+        {% for game in active_games %}
+            <li>{{ game }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Past Results:</h3>
+    <ul>
+        {% for result in past_results %}
+            <li>{{ result }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

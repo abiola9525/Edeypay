@@ -70,7 +70,7 @@
                     <td>{{ withdrawal.timestamp }}</td>
                     <td>
                         {% if withdrawal.status == False %}
-                        <span style="color:red;"><b>&#x2717;</b></span>
+                        <span style="color:blue;">Pending...</span>
                         {% elif withdrawal.status == True %}
                         <span style="color:green;"><b>&#x2713;</b></span>
                         {% endif %}

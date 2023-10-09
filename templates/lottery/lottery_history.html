@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <h2 style="text-align: center;">Lottery History</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Numbers Played</th>
+        <th>Amount Played</th>
+        <th>Winnings</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in lottery_entries %}
+        <tr>
+          <td>{{ entry.timestamp }}</td>
+          <td>{{ entry.first_number }} - {{ entry.second_number }}</td>
+          <td>{{ entry.amount }} units</td>
+          <td>
+            {% if entry.potential_winnings > 0 %}
+              {% if entry.potential_winnings <= user.account_balance %}
+                Congratulations! You won {{ entry.potential_winnings }} units!
+              {% else %}
+                You won {{ entry.potential_winnings }} units, but it exceeds your account balance.
+              {% endif %}
+            {% else %}
+              No winnings.
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="4">No lottery entries found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

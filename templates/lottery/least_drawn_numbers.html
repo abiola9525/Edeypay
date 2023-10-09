@@ -1,0 +1,32 @@
+<!-- least_drawn_numbers.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center">10 Least Drawn Numbers for Each Game Draw</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Game Draw</th>
+        <th>Least Drawn Numbers</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for draw, least_drawn_for_draw in least_drawn %}
+        <tr>
+          <td>{{ draw.name }}</td>
+          <td>
+            <ul>
+              {% for number, count in least_drawn_for_draw %}
+                <li>
+                  Number <a href="{% url 'number_detail' number %}">{{ number }}</a>: {{ count }} times
+                </li>
+              {% endfor %}
+            </ul>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

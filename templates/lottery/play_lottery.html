@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title text-center text-capitalize text">Play the Lottery</h2>
+          <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="first_number">First Number (1-77):</label>
+              <input type="number" name="first_number" min="1" max="77" required>
+              <br>
+              <label for="second_number">Second Number (1-77):</label>
+              <input type="number" name="second_number" min="1" max="77" required>
+              <br>
+              <label for="amount">Amount (>= 200):</label>
+              <input type="number" name="amount" min="200" required>
+              <br>
+            </div>
+            <button type="submit" class="btn btn-primary">Play</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

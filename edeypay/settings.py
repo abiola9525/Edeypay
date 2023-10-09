@@ -9,9 +9,13 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+from datetime import timedelta
 import os
+
 from dotenv import load_dotenv
 from pathlib import Path
+
+
 
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -41,12 +45,26 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'bootstrap4',
+    'widget_tweaks',
+    
     
     'account',
+    'lottery',
+    'lotteryx',
 ]
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# Celery Configuration
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Use the URL of your preferred message broker (e.g., Redis)
+
+# Example settings for task serialization, result backend, and other Celery options
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+
 
 MIDDLEWARE = [
     # 'account.middleware.AccountBalanceMiddleware',
@@ -91,6 +109,16 @@ DATABASES = {
     }
 }
 
+# Configure background tasks to run asynchronously
+BACKGROUND_TASK_RUN_ASYNC = True
+
+# Define the schedule for the management command
+BACKGROUND_TASKS = [
+    {
+        'name': 'path.to.generate_daily_lottery_data',  # Replace with the actual path to your command
+        'schedule': timedelta(days=1, hours=8, minutes=5),  # Run daily at 8:05 am
+    },
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -131,7 +159,9 @@ ACCOUNT_UNIQUE_EMAIL=True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -141,7 +171,7 @@ MEDIA_URL = '/media/'
 
 PAYSTACK_SECRET_KEY = os.environ['PAYSTACK_SECRET_KEY']
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.environ['EMAIL_HOST'] # SMTP server
 EMAIL_PORT = os.environ['EMAIL_PORT']  # Port for the SMTP server
 EMAIL_USE_TLS = True  # Use TLS for secure communication

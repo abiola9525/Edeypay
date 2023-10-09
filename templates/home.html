@@ -1,9 +1,425 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block head %}
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <style>
+        .header-image {
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 100%;
+            height: 80vh; /* Adjust this value as needed to control the height */
+        }
+        .header-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        
+        .text {
+            font-weight: bold;
+            color: blue; /* Change text color to make it visible on the image */
+        }  
+        .carousel-item-content {
+            text-align: center;
+            padding: 1px;
+            color: #fff;
+        }
+        
+        .carousel-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .carousel-description {
+            font-size: 16px;
+        }
+        
+        /* Header styling */
+        .header {
+            background-color: whitesmoke; /* Background color for the header */
+            color: #fff; /* Text color for the header */
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .header-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .header-subtitle {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: blue; /* Button background color */
+            color: #fff; /* Button text color */
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background-color: #FF8C66; /* Button background color on hover */
+        }
+        .header {
+            padding-top: 10px; /* Adjust the value as needed */
+        }
+        .coin-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .coin {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #FF0000, #000000); /* Red and black gradient background */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white; /* Coin text color */
+            margin: 0 5px; /* Adjust the margin as needed */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Optional shadow for depth */
+        }
+        
+    </style>
+{% endblock %}
+
 
 {% block content %}
-  <h2>Homepage</h2>
-  <p>Welcome to My Site, {% if user.is_authenticated %}{{ user.email }}{% else %}visitor{% endif %}!</p>
-  <p>
-    <strong>Total users registered: </strong> {{ count }}
-  </p>
+
+<!-- Header Start -->
+<div class="header">
+    <!-- Carousel -->
+    <div id="carouselExample" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            {% for game in games_with_winning_numbers %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="carousel-item-content" style="background-color: whitesmoke;">
+                    <h2 class="carousel-title">{{ game.name }}</h2>
+                    {% if game.winning_numbers == "0,0,0,0,0" %}
+                        Winning Numbers: <span>Pending</span>
+                    {% else %}
+                        <div class="coin-container">
+                            {% with game.winning_numbers|join:", " as winning_numbers_str %}
+                                {% for number in winning_numbers_str|split:", " %}
+                                    <div class="coin">{{ number }}</div>
+                                {% endfor %}
+                            {% endwith %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            <!-- Add more carousel items as needed -->
+        </div>
+    </div>
+    <!-- End Carousel -->
+
+    <div class="header">
+        <div class="header-image" style="background-image: url('{% static 'img/slider-1.png' %}')">
+            <div class="header-text">
+                <h1 class="text">Welcome to Edeypay, where luck meets opportunity. Explore a wide range of hourly lottery games, 
+                    and stand a chance to win big. Join us now for thrilling gameplay and life-changing lottery!</h1>
+                <a class="btn" href="">Read More</a>
+            </div>
+        </div>
+    </div>
+<!-- Header End -->
+
+
+
+
+<!-- About Start-->
+<div class="about">
+    <div class="container">
+        <div class="section-header">
+            <h2>About Us</h2>
+            
+        </div>
+        
+        <div class="row align-items-center">
+            <div class="col-md-12">
+                <div class="about-img">
+                    <img src="{% static 'img/about.png' %}" alt="" class="img-fluid">
+                </div>
+                <div class="about-content">
+                    <h2>Welcome to Our Site</h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras condimentum rutrum ligula. Integer ac porttitor mi. In finibus vehicula aliquet. Vestibulum et velit placerat pretium lorem Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras condimentum rutrum ligula. Integer ac porttitor mi. In finibus vehicula aliquet. Vestibulum et velit placerat pretium lorem
+                    </p>
+                    <a class="btn" href="#">Read More</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="about-img">
+                    <img src="{% static 'img/about-story.jpg' %}" alt="" class="img-fluid">
+                </div>
+                <div class="about-content">
+                    <h2>Our Story</h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras condimentum rutrum ligula. Integer ac porttitor mi. In finibus vehicula aliquet. Vestibulum et velit placerat pretium lorem
+                    </p>
+                    <a class="btn" href="#">Read More</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="about-img">
+                    <img src="{% static 'img/about-goal.jpg' %}" alt="" class="img-fluid">
+                </div>
+                <div class="about-content">
+                    <h2>Our Goal</h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras condimentum rutrum ligula. Integer ac porttitor mi. In finibus vehicula aliquet. Vestibulum et velit placerat pretium lorem
+                    </p>
+                    <a class="btn" href="#">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About End -->
+
+
+<!-- Call To Action Start -->
+<div class="call-to-action">
+    <div class="container text-center">
+        <div class="section-header">
+            <h2>Call to Action</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac lacus eget nunc imperdiet 
+            </p>
+        </div>
+        <a class="btn" href="#">Call To Action</a>
+    </div>
+</div>
+<!-- Call To Action End -->
+
+<!--Pricing start-->
+<div class="pricing">
+    <div class="container">
+        <div class="section-header">
+            <h2>How to Play</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="price-content">
+                    <div class="price-plan">
+                        <i class="ion-md-home"></i>
+                        <p class="price-title">Buy Tickets</p>
+                    </div>
+                    <p class="card-text">Purchase lottery tickets for your chance to win big prizes.</p>
+                    <a href="#" class="btn mian-btn price-btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="price-content">
+                    <div class="price-plan">
+                        <i class="ion-md-star"></i>
+                        <p class="price-title">Choose Numbers</p>
+                    </div>
+                    <p class="card-text">Select your lucky numbers or use Quick Pick for random numbers.</p>
+                    <a href="#" class="btn mian-btn price-btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="price-content">
+                    <div class="price-plan">
+                        <i class="ion-md-gift"></i>
+                        <p class="price-title">Win Prices</p>
+                    </div>
+                    <p class="card-text">Match your numbers to the drawn numbers and win amazing prizes.</p>
+                    <a href="#" class="btn mian-btn price-btn">Buy Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Pricing End-->
+
+
+<!-- Counters Start-->
+<div class="counters">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-6 text-center">
+                <i class="ion-md-person"></i>
+                <h2 data-toggle="counter-up">1000</h2>
+                <p>Our Customers</p>
+            </div>
+
+            <div class="col-lg-3 col-6 text-center">
+                <i class="ion-md-people"></i>
+                <h2 data-toggle="counter-up">300</h2>
+                <p>Our Winners</p>
+            </div>
+
+            <div class="col-lg-3 col-6 text-center">
+                <i class="ion-md-checkmark"></i>
+                <h2 data-toggle="counter-up">300</h2>
+                <p>Loading...</p>
+            </div>
+
+            <div class="col-lg-3 col-6 text-center">
+                <i class="ion-md-trending-up"></i>
+                <h2 data-toggle="counter-up">400</h2>
+                <p>Loading...</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Counters End-->
+
+
+
+<!-- Testimonials Start -->
+<div class="testimonials">
+    <div class="container">
+        <div class="section-header">
+            <h2>Reviews</h2>
+        </div>
+
+        <div class="owl-carousel testimonials-carousel">
+            <div class="testimonial-item row align-items-center">
+                <div class="testimonial-img">
+                    <img src="{% static 'img/testimonial-1.jpg' %}" alt="Testimonial image">
+                </div>
+                <div class="testimonial-text">
+                    <h3>Anna M. Brzezinski</h3>
+                    <h4>businesswoman</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Maecenas dictum vel
+                    </p>
+                </div>
+            </div>
+            <div class="testimonial-item row align-items-center">
+                <div class="testimonial-img">
+                    <img src="{% static 'img/testimonial-2.jpg' %}" alt="Testimonial image">
+                </div>
+                <div class="testimonial-text">
+                    <h3>Shirley H. Lee</h3>
+                    <h4>businesswoman</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Maecenas dictum vel
+                    </p>
+                </div>
+            </div>
+            <div class="testimonial-item row align-items-center">
+                <div class="testimonial-img">
+                    <img src="{% static 'img/testimonial-3.jpg' %}" alt="Testimonial image">
+                </div>
+                <div class="testimonial-text">
+                    <h3>Kerry E. Thomas</h3>
+                    <h4>businesswoman</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Maecenas dictum vel
+                    </p>
+                </div>
+            </div>
+            <div class="testimonial-item row align-items-center">
+                <div class="testimonial-img">
+                    <img src="{% static 'img/testimonial-4.jpg' %}" alt="Testimonial image">
+                </div>
+                <div class="testimonial-text">
+                    <h3>Kerry E. Thomas</h3>
+                    <h4>businesswoman</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Maecenas dictum vel
+                    </p>
+                </div>
+            </div>
+            <div class="testimonial-item row align-items-center">
+                <div class="testimonial-img">
+                    <img src="{% static 'img/testimonial-5.jpg' %}" alt="Testimonial image">
+                </div>
+                <div class="testimonial-text">
+                    <h3>Kerry E. Thomas</h3>
+                    <h4>businesswoman</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Maecenas dictum vel
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Testimonials End -->
+
+
+<!-- Contact Start -->
+<div class="contact">
+    <div class="container">
+        <div class="section-header">
+            <h2>Contact Us</h2>
+           
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form">
+                    <form class="contactForm">
+                        <div class="form-row">
+                            <div class="form-group col-sm-6">
+                                <input type="text" class="form-control" placeholder="Your Name" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <input type="email" class="form-control" placeholder="Your Email" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Subject" />
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="5" placeholder="Message"></textarea>
+                        </div>
+                        <div><button class="btn" type="submit">Send Message</button></div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d26361250.667320687!2d-113.75533773453304!3d36.24128894212527!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54eab584e432360b%3A0x1c3bb99243deb742!2sUnited%20States!5e0!3m2!1sen!2sbd!4v1574923227698!5m2!1sen!2sbd" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Contact End -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var swiper = new Swiper('.swiper-container', {
+      // Optional: Add more Swiper options here
+      slidesPerView: 1,
+      spaceBetween: 10,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination',
+      },
+    });
+  </script>
+  
 {% endblock %}

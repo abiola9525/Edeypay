@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.utils import timezone
-from datetime import datetime
+from datetime import date, datetime
 import uuid
 from django.contrib.auth import login, authenticate
-from .forms import SignupForm, LoginForm, WithdrawForm
+
+from lotteryx.models import LotteryDraw
+from .forms import SignupForm, LoginForm, WithdrawForm, EditProfileForm
 from . models import User, PaymentTransaction, Withdraw
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -22,8 +25,25 @@ import json
 
 def home(request):
     count = User.objects.count()
+    today = date.today()
+    draws = LotteryDraw.objects.filter(draw_date__date=today)
+    
+    # winning_numbers_list = [draw.winning_numbers.split(',') for draw in draws]\
+    games_with_winning_numbers = []
+    
+    for draw in draws:
+        game_name = draw.name  # Replace 'game_name' with the actual field name that stores the game name
+        winning_numbers = draw.winning_numbers.split(',')
+        if all(number == '0' for number in winning_numbers):
+            winning_numbers = 'Pending'
+        game_data = {'name': game_name, 'winning_numbers': winning_numbers}
+        games_with_winning_numbers.append(game_data)
+    
     return render(request, 'home.html', {
-        'count': count
+        'count': count,
+        'games_with_winning_numbers': games_with_winning_numbers,
+        # 'winning_numbers_list': winning_numbers_list,
+        
     })
 
 @login_required
@@ -36,14 +56,36 @@ def payment_history(request):
         'withdrawals': withdrawals,
     })
 
-# def about(request):
-#     return render(request, 'about.html')
+def about(request):
+    return render(request, 'about.html')
 
-# def contact(request):
-#     return render(request, 'contact.html')
+@login_required
+def profile(request):
+    return render(request, 'profile.html')
 
-# def service(request):
-#     return render(request, 'services.html')
+@login_required
+def edit_profile(request):
+    user = request.user
+
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            print("Form is valid and image uploaded successfully.")
+            print(form.cleaned_data)
+            print(user.image)
+            return redirect('profile')  # Redirect to the profile page after successful edit
+    else:
+        form = EditProfileForm(instance=user)
+        print("Form errors:", form.errors)
+
+    return render(request, 'edit_profile.html', {'form': form})
+
+def terms(request):
+    return render(request, 'terms.html')
+
+def privacy(request):
+    return render(request, 'privacy.html')
 
 class SignupView(View):
     def get(self, request):
@@ -55,10 +97,14 @@ class SignupView(View):
         if form.is_valid():
             user = form.save_user()
             login(request, user)
-            return redirect('home')  # Redirect to the home page
+            return redirect('home')  # Redirect to the home page upon successful registration
+        else:
+            return render(request, 'registration/signup.html', {'form': form})  # Render the form with errors
+
 
 
 PAYSTACK_SECRET_KEY = settings.PAYSTACK_SECRET_KEY
+
 
 def initiate_payment(request):
     if request.method == 'POST':
@@ -123,7 +169,7 @@ def verify_payment(request):
 def payment_failed(request):
     return render(request, 'payment_failed.html')
 
-
+@login_required
 def withdraw(request):
     if request.method == 'POST':
         form = WithdrawForm(request.POST)
@@ -142,7 +188,7 @@ def withdraw(request):
                 user.account_balance -= amount
                 user.save()
                 Withdraw.objects.create(user=user, amount=amount, status=False)
-                messages.success(request, 'Withdrawal successful.')
+                messages.success(request, 'Withdrawal successful. Status will be updated when your account is funded')
                 return redirect('payment_history')  # Redirect to withdrawal history page
 
     else:
