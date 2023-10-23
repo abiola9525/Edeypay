@@ -16,7 +16,7 @@ click-repl==0.3.0
 coreapi==2.3.3
 coreschema==0.0.4
 dj-database-url==2.1.0
-Django==4.2.2
+Django==3.2.22
 django-background-tasks==1.2.5
 django-bootstrap==0.2.4
 django-bootstrap4==23.2
