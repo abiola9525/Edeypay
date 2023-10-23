@@ -61,7 +61,7 @@ ruamel.yaml==0.17.31
 ruamel.yaml.clib==0.2.7
 simplejson==3.19.1
 six==1.16.0
-soupsieve==2.5
+soupsieve==2.4.1
 sqlparse==0.4.4
 swagger-spec-validator==3.0.3
 typing_extensions==4.6.3
