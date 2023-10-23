@@ -19,7 +19,7 @@ dj-database-url==2.1.0
 Django==3.2.22
 django-background-tasks==1.2.5
 django-bootstrap==0.2.4
-django-bootstrap4==23.2
+django-bootstrap4==23.1
 django-compat==1.0.15
 django-cors-headers==4.1.0
 django-crispy-forms==2.0
