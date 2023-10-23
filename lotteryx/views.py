@@ -29,7 +29,7 @@ def is_ticket_winner(ticket_id):
         if ticket.is_winner == "Pending":  # Check if the ticket was pending and now becomes a winner
             # Calculate the winnings for this ticket
             amount_played = int(ticket.amount_played)
-            prize_amount = int(amount_played * 2)  # Adjust this calculation as needed
+            prize_amount = int(amount_played * 20)  # Adjust this calculation as needed
 
             # Add winnings to the user's account balance for this ticket only
             ticket.user.account_balance += prize_amount

@@ -104,10 +104,10 @@
   function updateAmountToWin() {
     const amountPlayed = parseFloat(document.getElementById('amount_played').value);
     if (isNaN(amountPlayed) || amountPlayed === 0) {
-      document.getElementById('amount_to_win').textContent = 'Amount to Win: $0';
+      document.getElementById('amount_to_win').textContent = 'Amount to Win: NGN 0';
     } else {
       const amountToWin = amountPlayed * 20; // Adjust the multiplier as needed
-      document.getElementById('amount_to_win').textContent = `Amount to Win: $${amountToWin.toFixed(2)}`;
+      document.getElementById('amount_to_win').textContent = `Amount to Win: NGN ${amountToWin.toFixed(2)}`;
     }
   }
 
