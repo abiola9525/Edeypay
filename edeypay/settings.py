@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from datetime import timedelta
+import dj_database_url
 import os
 
 from dotenv import load_dotenv
@@ -26,12 +27,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7mty!*vcy1&6o^bi)8h3rbw9#sc!mtd@1k=7ir3mwaqve-jmib'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
+# 'django-insecure-7mty!*vcy1&6o^bi)8h3rbw9#sc!mtd@1k=7ir3mwaqve-jmib'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# os.environ.get("DEBUG", "False").lower() == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', ]
+# os.environ.get("ALLOWED_HOSTS").split(" ")
 
 
 # Application definition
@@ -108,6 +112,10 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+database_url = os.environ.get("DATABASE_URL")
+DATABASES["default"] = dj_database_url.parse(database_url)
+
 
 # Configure background tasks to run asynchronously
 BACKGROUND_TASK_RUN_ASYNC = True
