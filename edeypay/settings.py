@@ -34,7 +34,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = True
 # os.environ.get("DEBUG", "False").lower() == "True"
 
-ALLOWED_HOSTS = ['127.0.0.1', ]
+ALLOWED_HOSTS = ['127.0.0.1', 'edeypay.onrender.com',]
 # os.environ.get("ALLOWED_HOSTS").split(" ")
 
 
