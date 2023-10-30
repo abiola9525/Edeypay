@@ -179,8 +179,8 @@
                                 </ul>
                             </li>
                         {% else %}
-                            <li><a href="about.html" title="">About Us</a></li>
-                            <li><a href="contact.html" title="">Contact Us</a></li>
+                            <li><a href="{% url 'signup' %}" title="">Register</a></li>
+                            <li><a href="{% url 'login' %}" title="">Login</a></li>
                         {% endif %}
                         
                     </ul>

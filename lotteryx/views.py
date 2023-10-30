@@ -4,6 +4,7 @@ from django.db.models import Q
 from django import forms
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import LotteryTicket, LotteryDraw
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Count
 from django.utils import timezone as tz
@@ -128,6 +129,7 @@ def is_ticket_winner(ticket_id):
 def go(request):
     pass
 
+@login_required
 class PurchaseTicketForm(forms.Form):
     number1 = forms.CharField(max_length=255, required=True)
     number2 = forms.CharField(max_length=255, required=True)
@@ -184,7 +186,7 @@ class PurchaseTicketForm(forms.Form):
 #     return render(request, 'lottery/purchase_ticket.html', {'draws': draws, 'form': form})
 
 
-
+@login_required
 def least_drawn_numbers(request):
     # Get the current date
     current_date = timezone.now().date()
@@ -226,7 +228,7 @@ def number_detail(request, number):
 
     return render(request, 'lottery/number_detail.html', {'number': number, 'tickets_for_number': tickets_for_number})
 
-
+@login_required
 def purchase_ticket(request):
     current_datetime = datetime.now()
     today = current_datetime.date()
@@ -386,7 +388,7 @@ def purchase_ticket(request):
     
 #     return render(request, 'lottery/ticket_history.html', {'ticket_data': ticket_data})
 
-
+@login_required
 def ticket_history(request):
     # Retrieve the user's lottery ticket history
     ticket_history = LotteryTicket.objects.filter(user=request.user)
