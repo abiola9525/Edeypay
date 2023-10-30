@@ -1,283 +1,775 @@
 {% extends 'base.html' %}
-
-{% block style %}
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #1E90FF, #FFD700);
-
-      }   
-      /* Hero Section */
-      .hero {
-          background: linear-gradient(to bottom, #FFD700, #1E90FF);
-          color: #fff;
-          padding: 80px 0;
-          text-align: center;
-      }
-  
-      .hero h1 {
-          font-size: 2.5rem;
-          margin-bottom: 20px;
-      }
-  
-      .hero p {
-          font-size: 1.1rem;
-          margin-bottom: 20px;
-      }
-  
-      /* How to Play Section */
-      .how-to-play {
-          padding: 80px 0;
-      }
-  
-      .how-to-play h2 {
-          font-size: 2rem;
-          margin-bottom: 40px;
-      }
-  
-      .card {
-          border: none;
-          margin-bottom: 30px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-          transition: transform 0.3s ease;
-      }
-  
-      .card:hover {
-          transform: translateY(-5px);
-      }
-  
-      .card-title {
-          font-size: 1.25rem;
-          font-weight: bold;
-      }
-  
-      /* Recent Winners Section */
-      .recent-winners h2 {
-          font-size: 2rem;
-          margin-bottom: 40px;
-      }
-  
-      /* Call to Action Section */
-      .cta {
-          background-color: #FFD700;
-          padding: 40px 0;
-      }
-  
-      .cta h3 {
-          font-size: 2rem;
-          margin-bottom: 20px;
-      }
-  
-      /* Footer */
-      .footer {
-          padding: 20px 0;
-          text-align: center;
-      }
-  
-      .footer p {
-          margin: 0;
-      } 
+{% load static %}
+{% load custom_filters %}
+{% block head %}
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <style>
+        .header-image {
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 100%;
+            height: 80vh; /* Adjust this value as needed to control the height */
+        }
+        .header-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        
+        .text {
+            font-weight: bold;
+            color: blue; /* Change text color to make it visible on the image */
+        }  
+        .carousel-item-content {
+            text-align: center;
+            padding: 1px;
+            color: #fff;
+        }
+        
+        .carousel-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .carousel-description {
+            font-size: 16px;
+        }
+        
+        /* Header styling */
+        .header {
+            background-color: whitesmoke; /* Background color for the header */
+            color: #fff; /* Text color for the header */
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .header-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .header-subtitle {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: blue; /* Button background color */
+            color: #fff; /* Button text color */
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background-color: #FF8C66; /* Button background color on hover */
+        }
+        .header {
+            padding-top: 10px; /* Adjust the value as needed */
+        }
+        .coin-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .coin {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #FF0000, #000000); /* Red and black gradient background */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white; /* Coin text color */
+            margin: 0 5px; /* Adjust the margin as needed */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Optional shadow for depth */
+        }
+        
+    </style>
 {% endblock %}
 
+
 {% block content %}
-      <!-- Hero Section -->
-      <section class="hero">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h1 class="animated fadeInDown">Welcome to Edeypay</h1>
-                    <p>Edeypay is the easiest and most convenient way to play the lottery. Simply create an account, choose your numbers, and click play. We'll take care of the rest! And if you win, we'll pay you out immediately.</p>
-                    {% if user.is_authenticated %}
+
+<!-- Header Start -->
+<div class="header">
+    <!-- Carousel -->
+    <div id="carouselExample" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            {% for game in games_with_winning_numbers %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="carousel-item-content" style="background-color: whitesmoke;">
+                    <h2 class="carousel-title">{{ game.name }}</h2>
+                    {% if game.winning_numbers == "0,0,0,0,0" %}
+                        Winning Numbers: <span>Pending</span>
                     {% else %}
-                    <p>Sign up today and start winning!</p>
-                    <a href="{% url 'signup' %}" class="btn btn-primary btn-lg animated fadeInUp">Get Started</a>
+                        <div class="coin-container">
+                            {% with game.winning_numbers|join:", " as winning_numbers_str %}
+                                {% for number in winning_numbers_str|split:", " %}
+                                    <div class="coin">{{ number }}</div>
+                                {% endfor %}
+                            {% endwith %}
+                        </div>
                     {% endif %}
                 </div>
-                <div class="col-lg-6">
-                    <img src="lottery-ticket.png" alt="Lottery Ticket" class="img-fluid animated fadeInRight">
+            </div>
+            {% endfor %}
+            <!-- Add more carousel items as needed -->
+        </div>
+    </div>
+    <!-- End Carousel -->
+
+    <div class="header">
+        <div class="header-image img-fluid" style="background-image: url('{% static 'img/slider-1.png' %}'); background-size: cover; background-repeat: no-repeat;">
+            <div class="header-text">
+                <h1 class="text text-center text-lg-left" style="size: 5px;">Welcome to Edeypay, where luck meets opportunity. Explore a wide range of hourly lottery games, and stand a chance to win big. Join us now for thrilling gameplay and life-changing lottery!</h1>
+                <a class="btn btn-primary" href="">Read More</a>
+            </div>
+        </div>
+    </div>
+    
+<!-- Header End -->
+
+
+
+
+<!-- About Start-->
+<div class="about">
+    <div class="container">
+        <div class="section-header">
+            <h2>About Us</h2>
+            
+        </div>
+        
+        <div class="row align-items-center">
+            <div class="col-md-12">
+                <div class="about-img">
+                    <img src="{% static 'img/about.png' %}" alt="" class="img-fluid">
+                </div>
+                <div class="about-content">
+                    <h2>Welcome to Our Site</h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras condimentum rutrum ligula. Integer ac porttitor mi. In finibus vehicula aliquet. Vestibulum et velit placerat pretium lorem Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras condimentum rutrum ligula. Integer ac porttitor mi. In finibus vehicula aliquet. Vestibulum et velit placerat pretium lorem
+                    </p>
+                    <a class="btn" href="#">Read More</a>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- How to Play Section -->
-    <section class="how-to-play bg-light">
-        <div class="container">
-            <h2 class="text-center">How to Play</h2>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card animated pulse">
-                        <img src="icon1.png" alt="Icon 1" class="card-img-top">
-                        <div class="card-body">
-                            <h5 class="card-title">Buy Tickets</h5>
-                            <p class="card-text">Purchase lottery tickets for your chance to win big prizes.</p>
-                        </div>
-                    </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="about-img">
+                    <img src="{% static 'img/about-story.jpg' %}" alt="" class="img-fluid">
                 </div>
-                <div class="col-md-4">
-                    <div class="card animated pulse">
-                        <img src="icon2.png" alt="Icon 2" class="card-img-top">
-                        <div class="card-body">
-                            <h5 class="card-title">Choose Numbers</h5>
-                            <p class="card-text">Select your lucky numbers or use Quick Pick for random numbers.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card animated pulse">
-                        <img src="icon3.png" alt="Icon 3" class="card-img-top">
-                        <div class="card-body">
-                            <h5 class="card-title">Win Prizes</h5>
-                            <p class="card-text">Match your numbers to the drawn numbers and win amazing prizes.</p>
-                        </div>
-                    </div>
+                <div class="about-content">
+                    <h2>Our Story</h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras condimentum rutrum ligula. Integer ac porttitor mi. In finibus vehicula aliquet. Vestibulum et velit placerat pretium lorem
+                    </p>
+                    <a class="btn" href="#">Read More</a>
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="about-img">
+                    <img src="{% static 'img/about-goal.jpg' %}" alt="" class="img-fluid">
+                </div>
+                <div class="about-content">
+                    <h2>Our Goal</h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras condimentum rutrum ligula. Integer ac porttitor mi. In finibus vehicula aliquet. Vestibulum et velit placerat pretium lorem
+                    </p>
+                    <a class="btn" href="#">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About End -->
 
-            <!-- Recent Winners Section -->
-            <div class="recent-winners">
-                <h2 class="text-center">Recent Winners</h2>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">John Doe</h5>
-                                <p class="card-text">Won $1 million on the Edeypay lottery!</p>
+
+<!-- Call To Action Start -->
+<div class="call-to-action">
+    <div class="container text-center">
+        <div class="section-header">
+            <h2>Call to Action</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac lacus eget nunc imperdiet 
+            </p>
+        </div>
+        <a class="btn" href="#">Call To Action</a>
+    </div>
+</div>
+<!-- Call To Action End -->
+
+<!--Pricing start-->
+<div class="pricing">
+    <div class="container">
+        <div class="section-header">
+            <h2>How to Play</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="price-content">
+                    <div class="price-plan">
+                        <i class="ion-md-home"></i>
+                        <p class="price-title">Buy Tickets</p>
+                    </div>
+                    <p class="card-text">Purchase lottery tickets for your chance to win big prizes.</p>
+                    <a href="#" class="btn mian-btn price-btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="price-content">
+                    <div class="price-plan">
+                        <i class="ion-md-star"></i>
+                        <p class="price-title">Choose Numbers</p>
+                    </div>
+                    <p class="card-text">Select your lucky numbers or use Quick Pick for random numbers.</p>
+                    <a href="#" class="btn mian-btn price-btn">Buy Now</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="price-content">
+                    <div class="price-plan">
+                        <i class="ion-md-gift"></i>
+                        <p class="price-title">Win Prices</p>
+                    </div>
+                    <p class="card-text">Match your numbers to the drawn numbers and win amazing prizes.</p>
+                    <a href="#" class="btn mian-btn price-btn">Buy Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Pricing End-->
+
+
+<!-- Counters Start-->
+<div class="counters">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-6 text-center">
+                <i class="ion-md-person"></i>
+                <h2 data-toggle="counter-up">1000</h2>
+                <p>Our Customers</p>
+            </div>
+
+            <div class="col-lg-3 col-6 text-center">
+                <i class="ion-md-people"></i>
+                <h2 data-toggle="counter-up">300</h2>
+                <p>Our Winners</p>
+            </div>
+
+            <div class="col-lg-3 col-6 text-center">
+                <i class="ion-md-checkmark"></i>
+                <h2 data-toggle="counter-up">300</h2>
+                <p>Loading...</p>
+            </div>
+
+            <div class="col-lg-3 col-6 text-center">
+                <i class="ion-md-trending-up"></i>
+                <h2 data-toggle="counter-up">400</h2>
+                <p>Loading...</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Counters End-->
+
+
+
+<!-- Testimonials Start -->
+<div class="testimonials">
+    <div class="container">
+        <div class="section-header">
+            <h2>Reviews</h2>
+        </div>
+
+        <div class="owl-carousel testimonials-carousel">
+            <div class="testimonial-item row align-items-center">
+                <div class="testimonial-img">
+                    <img src="{% static 'img/testimonial-1.jpg' %}" alt="Testimonial image">
+                </div>
+                <div class="testimonial-text">
+                    <h3>Anna M. Brzezinski</h3>
+                    <h4>businesswoman</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Maecenas dictum vel
+                    </p>
+                </div>
+            </div>
+            <div class="testimonial-item row align-items-center">
+                <div class="testimonial-img">
+                    <img src="{% static 'img/testimonial-2.jpg' %}" alt="Testimonial image">
+                </div>
+                <div class="testimonial-text">
+                    <h3>Shirley H. Lee</h3>
+                    <h4>businesswoman</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Maecenas dictum vel
+                    </p>
+                </div>
+            </div>
+            <div class="testimonial-item row align-items-center">
+                <div class="testimonial-img">
+                    <img src="{% static 'img/testimonial-3.jpg' %}" alt="Testimonial image">
+                </div>
+                <div class="testimonial-text">
+                    <h3>Kerry E. Thomas</h3>
+                    <h4>businesswoman</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Maecenas dictum vel
+                    </p>
+                </div>
+            </div>
+            <div class="testimonial-item row align-items-center">
+                <div class="testimonial-img">
+                    <img src="{% static 'img/testimonial-4.jpg' %}" alt="Testimonial image">
+                </div>
+                <div class="testimonial-text">
+                    <h3>Kerry E. Thomas</h3>
+                    <h4>businesswoman</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Maecenas dictum vel
+                    </p>
+                </div>
+            </div>
+            <div class="testimonial-item row align-items-center">
+                <div class="testimonial-img">
+                    <img src="{% static 'img/testimonial-5.jpg' %}" alt="Testimonial image">
+                </div>
+                <div class="testimonial-text">
+                    <h3>Kerry E. Thomas</h3>
+                    <h4>businesswoman</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Maecenas dictum vel
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Testimonials End -->
+
+
+<!-- Contact Start -->
+<div class="contact">
+    <div class="container">
+        <div class="section-header">
+            <h2>Contact Us</h2>
+           
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form">
+                    <form class="contactForm">
+                        <div class="form-row">
+                            <div class="form-group col-sm-6">
+                                <input type="text" class="form-control" placeholder="Your Name" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <input type="email" class="form-control" placeholder="Your Email" />
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Jane Smith</h5>
-                                <p class="card-text">Won $500,000 on the Edeypay lottery!</p>
-                            </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Subject" />
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Mike Jones</h5>
-                                <p class="card-text">Won $100,000 on the Edeypay lottery!</p>
-                            </div>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="5" placeholder="Message"></textarea>
                         </div>
-                    </div>
+                        <div><button class="btn" type="submit">Send Message</button></div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d253229.13746571765!2d3.7402437679170566!3d7.386887224947559!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10398d77eeff086f%3A0x3b33e0f76e8e04a9!2sIbadan%2C%20Oyo!5e0!3m2!1sen!2sng!4v1698142903963!5m2!1sen!2sng" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</div>
+<!-- Contact End -->
 
-    {% if user.is_authenticated %}
-    {% else %}
-    <!-- Call to Action Section -->
-    <section class="cta">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h3 class="text-center">Play the Edeypay lottery today and start winning!</h3>
-                    <a href="{% url 'signup' %}" class="btn btn-primary btn-lg btn-block">Sign Up</a>
+<!--FAQ Start-->
+<div class="container mt-5">
+    <h2 class="text-center mb-4">FAQ - Edeypay</h2>
+    <div class="accordion" id="faqAccordion">
+
+        <!-- Question 1 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading1">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse1" role="button" aria-expanded="true" aria-controls="faqCollapse1">
+                        How does the lottery work on this website?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse1" class="collapse show" aria-labelledby="faqHeading1" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    Simply register with your full name, mobile number, age, and account number. Fund your account with a minimum of ₦1,000, start playing with a minimum of ₦200. Pick two numbers, and once one of your numbers is picked by the system, you have won. The odds are 20, which means you can win 20 times your initial bet.
                 </div>
             </div>
         </div>
-    </section>
-    {% endif %}
-    <!-- Footer -->
-    <footer class="footer bg-dark text-white">
-        <div class="container">
-            <p>&copy; 2023 Edeypay Lottery. All rights reserved.</p>
-        </div>
-    </footer>
 
-    <!-- Add Bootstrap JS CDN Links -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <!-- Question 2 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading2">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse2" role          ="button" aria-expanded="false" aria-controls="faqCollapse2">
+                        How can I participate in the lottery?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse2" class="collapse" aria-labelledby="faqHeading2" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    You can participate by simply registering, funding your account with just ₦1,000, and start playing with a minimum of ₦200.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading3">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse3" role="button" aria-expanded="false" aria-controls="faqCollapse3">
+                        Is this website legal and regulated?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse3" class="collapse" aria-labelledby="faqHeading3" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    This website is being regulated by the Nigerian National Lottery Commission.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading4">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse4" role="button" aria-expanded="false" aria-controls="faqCollapse4">
+                        What are the odds of winning a prize?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse4" class="collapse" aria-labelledby="faqHeading4" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    The odds are 20, which means that if you play with ₦500, you win ₦10,000. If you play with ₦1,000, you win ₦20,000, and if you play with ₦50,000, you win ₦1,000,000.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading5">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse5" role="button" aria-expanded="false" aria-controls="faqCollapse5">
+                        How are winners determined and notified?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse5" class="collapse" aria-labelledby="faqHeading5" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    At the end of every game time, the system automatically generates five numbers from 1 to 77. If your number is part of the numbers that the system picked, you have won. The five numbers are then published on the top right corner of our website.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 6 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading6">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse6" role="button" aria-expanded="false" aria-controls="faqCollapse6">
+                        What happens if I win?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse6" class="collapse" aria-labelledby="faqHeading6" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    Your money will be added to your balance, and you can withdraw it anytime.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 7 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading7">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse7" role="button" aria-expanded="false" aria-controls="faqCollapse7">
+                        How do I withdraw my money?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse7" class="collapse" aria-labelledby="faqHeading7" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    You can withdraw your money anytime, any day once you reach a withdrawal threshold of ₦5,000 only. Once you make a withdrawal, you will see your money inside your bank account almost immediately.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 8 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading8">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse8" role="button" aria-expanded="false" aria-controls="faqCollapse8">
+                        Are there age or location restrictions for participation?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse8" class="collapse" aria-labelledby="faqHeading8" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    The age restriction is 18. If you are under 18, you cannot register on our website, and there's no location barrier to use our website.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 9 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading9">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse9" role="button" aria-expanded="false" aria-controls="faqCollapse9">
+                        What payment methods are accepted on this website?
+                    </a>
+                </h5>
+            </div>
+            <div id="faqCollapse9" class="collapse" aria-labelledby="faqHeading9" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    We accept almost all payment methods that you can think of, which is why you can play Edeypay lottery games from anywhere in the world.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 10 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading10">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse10" role="button" aria-expanded="false" aria-controls="faqCollapse10">
+                        Is my personal and financial information secure on this website?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse10" class="collapse" aria-labelledby="faqHeading10" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    All your personal and financial information is well secure on our website. We don't sell, trade, or give out any of your information for any reason.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 11 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading11">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse11" role="button" aria-expanded="false" aria-controls="faqCollapse11">
+                        Can I play the lottery from outside of Nigeria?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse11" class="collapse" aria-labelledby="faqHeading11" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    Yes, you can play Edeypay lottery games from anywhere in the world.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 12 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading12">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse12" role="button" aria-expanded="false" aria-controls="faqCollapse12">
+                        What happens to unwithdrawn money?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse12" class="collapse" aria-labelledby="faqHeading12" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    Your unwithdrawn money will be in your account and will be readily available for withdrawal anytime, any day, so long as you can still log in to your account.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 13 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading13">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse13" role="button" aria-expanded="false" aria-controls="faqCollapse13">
+                        Are taxes withheld from my winnings?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse13" class="collapse" aria-labelledby="faqHeading13" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    No taxes or percentages or hidden charges of any kind are deducted from your money, even when making a withdrawal. Your money is paid in full.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 14 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading14">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse14" role="button" aria-expanded="false" aria-controls="faqCollapse14">
+                        Can I play multiple games at once?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse14" class="collapse" aria-labelledby="faqHeading14" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    Yes, you can play up to five games at once, but not more than five. If caught playing more than five games at once and you win, you might not be paid.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 15 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading15">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse15" role="button" aria-expanded="false" aria-controls="faqCollapse15">
+                        How can I check the results of past lottery draws?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse15" class="collapse" aria-labelledby="faqHeading15" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    Results are always displayed on the right side top of our website, and if your number was picked, your winnings will be added to your money.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 16 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading16">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse16" role="button" aria-expanded="false" aria-controls="faqCollapse16">
+                        Can I cancel or refund my ticket purchase?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse16" class="collapse" aria-labelledby="faqHeading16" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    No, there is no cancellation of tickets once purchased.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 17 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading17">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse17" role="button" aria-expanded="false" aria-controls="faqCollapse17">
+                        Do you offer any promotions or bonuses for players?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse17" class="collapse" aria-labelledby="faqHeading17" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    Yes, we always offer promotions and bonuses, so always stay in touch with all our social media platforms and turn on notifications for our website on your device.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 18 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading18">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse18" role="button" aria-expanded="false" aria-controls="faqCollapse18">
+                        How can I contact customer support for assistance?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse18" class="collapse" aria-labelledby="faqHeading18" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    Call or text or WhatsApp 08102437371 or send an Email to customersupport@edeypay.money, aiictcenter@gmail.com.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 19 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading19">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse19" role="button" aria-expanded="false" aria-controls="faqCollapse19">
+                        Is there a minimum age requirement to use this website?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse19" class="collapse" aria-labelledby="faqHeading19" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    The minimum age to use our website is 18+.
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 20 -->
+        <div class="card">
+            <div class="card-header" id="faqHeading20">
+                <h5 class="mb-0">
+                    <a class="text-decoration-none" data-toggle="collapse" href="#faqCollapse20" role="button" aria-expanded="false" aria-controls="faqCollapse20">
+                        What if I encounter technical issues while using the website?
+                    </a>
+                </h5>
+            </div>
+
+            <div id="faqCollapse20" class="collapse" aria-labelledby="faqHeading20" data-parent="#faqAccordion">
+                <div class="card-body" style="color: #000000;">
+                    Kindly contact our customer service, and it will be fixed immediately.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--FAQ End-->
 {% endblock %}
 
-
-{% extends 'base.html' %}
-{% block content %}
-<div class="container mt-5">
-  <h2 class="mb-4">Next Result in:</h2>
-  <div id="countdown">
-    <span id="hours">{{ hours_remaining }}</span> hours
-    <span id="minutes">{{ minutes_remaining }}</span> minutes
-    <span id="seconds">{{ seconds_remaining }}</span> seconds
-  </div>
-</div>
-
-<h2 class="mt-5">Lottery Results</h2>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Ticket Numbers</th>
-      <th scope="col">Amount Played</th>
-      <th scope="col">Result</th>
-      <th scope="col">Status</th>
-      <th scope="col">Result Time</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for result in results %}
-    <tr>
-      <td>{{ result.numbers }}</td>
-      <td>{{ result.amount_played }}</td>
-      <td>
-        {% if result.result %}
-        {{ result.result|join:', ' }}
-        {% else %}
-        Result Pending
-        {% endif %}
-      </td>
-      <td>
-        {% if result.result %}
-        {% if result.numbers.0 in result.result or result.numbers.1 in result.result %}
-        <span class="text-success">Won</span>
-        {% else %}
-        <span class="text-danger">Lost</span>
-        {% endif %}
-        {% else %}
-        Pending
-        {% endif %}
-      </td>
-      <td>{{ result.result_time|date:"Y-m-d H:i:s" }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 <script>
-  // Function to update the countdown
-  function updateCountdown() {
-    var hoursElem = document.getElementById('hours');
-    var minutesElem = document.getElementById('minutes');
-    var secondsElem = document.getElementById('seconds');
-    
-    // Decrease the seconds remaining
-    seconds_remaining--;
-    
-    // Adjust minutes and hours if necessary
-    if (seconds_remaining < 0) {
-      seconds_remaining = 59;
-      minutes_remaining--;
-      if (minutes_remaining < 0) {
-        minutes_remaining = 59;
-        hours_remaining--;
-      }
-    }
-
-    // Update the HTML elements
-    hoursElem.textContent = hours_remaining;
-    minutesElem.textContent = minutes_remaining;
-    secondsElem.textContent = seconds_remaining;
-  }
-
-  // Update the countdown every second (1000 milliseconds)
-  var hours_remaining = {{ hours_remaining }};
-  var minutes_remaining = {{ minutes_remaining }};
-  var seconds_remaining = {{ seconds_remaining }};
-  setInterval(updateCountdown, 1000);
-</script>
-
-
-
+    var swiper = new Swiper('.swiper-container', {
+      // Optional: Add more Swiper options here
+      slidesPerView: 1,
+      spaceBetween: 10,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination',
+      },
+    });
+  </script>
+  
 {% endblock %}

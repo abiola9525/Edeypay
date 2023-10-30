@@ -5,7 +5,7 @@ from datetime import date, datetime
 import uuid
 from django.contrib.auth import login, authenticate
 
-from lotteryx.models import LotteryDraw
+from lotteryx.models import LotteryDraw, Game
 from .forms import SignupForm, LoginForm, WithdrawForm, EditProfileForm
 from . models import User, PaymentTransaction, Withdraw
 from django.contrib.auth.decorators import login_required
@@ -27,6 +27,7 @@ def home(request):
     count = User.objects.count()
     today = date.today()
     draws = LotteryDraw.objects.filter(draw_date__date=today)
+    games = Game.objects.all()
     
     # winning_numbers_list = [draw.winning_numbers.split(',') for draw in draws]\
     games_with_winning_numbers = []
@@ -42,6 +43,7 @@ def home(request):
     return render(request, 'home.html', {
         'count': count,
         'games_with_winning_numbers': games_with_winning_numbers,
+        'games': games
         # 'winning_numbers_list': winning_numbers_list,
         
     })

@@ -1,155 +1,298 @@
 {% load static %}
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
-        <title>Edeypay</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="Edeypay" name="keywords">
-        <meta content="Edeypay" name="description">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <link rel="icon" href="{% static 'img/favicon.ico' %}" sizes="35x35" type="image/ico">
+        <title>Elenusonso and its Environ Muslim Community</title>
 
-        <!-- Favicon -->
-        <link href="{% static 'img/favicon.ico' %} " rel="icon">
-
-        <!-- Google Font -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway:200,300,400,500,600,700,800,900&display=swap" rel="stylesheet"> 
-
-        <!-- Libraries CSS -->
-        <link href="{% static 'lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-        <link href="{% static 'lib/ionicons/css/ionicons.min.css' %}" rel="stylesheet">
-        <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
-        <link href="{% static 'lib/lightbox/css/lightbox.min.css' %}" rel="stylesheet">
-
-        <!-- Main Stylesheet -->
-        <link href="{% static 'css/style.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+        <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/jquery.fancybox.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/jquery.bootstrap-touchspin.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/perfect-scrollbar.css' %}">
+        <link rel="stylesheet" href="{% static 'css/slick.css' %}">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+        <link rel="stylesheet" href="{% static 'css/color.css' %}">
         {% block head %} {% endblock %}
     </head>
-
     <body>
-        <!-- Nav Start -->
-        <div id="nav">
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-                    <a href="{% url 'home' %}" class="navbar-brand">
-                        <!--<img src="{% static 'img/logo.png' %}" alt="Logo">-->
-                         <h1 style="color: white;">Edeypay</h1>
-                    </a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <div class="navbar-nav ml-auto">
-                            <a href="{% url 'home' %}" class="nav-item nav-link">Home</a>
-                            <a href="{% url 'about' %}" class="nav-item nav-link">About</a>
-                            {% if user.is_authenticated %}
-                                <a href="{% url 'play_lottery' %}" class="nav-item nav-link">Play Lottery</a>
-                                <a href="{% url 'withdraw' %}" class="nav-item nav-link">Withdraw</a>
-                                <!--<a href="{% url 'generate_lottery_result' %}" class="nav-item nav-link">Lottery Result</a>-->
-                                
-                                
-                                <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ user.first_name }}</a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
-                                        <a class="dropdown-item" href="{% url 'payment_history' %}">Payment History</a>
-                                        <a class="dropdown-item" href="{% url 'lottery_history' %}">Lottery History</a>
-                                        <a class="dropdown-item" href="{% url 'password_change' %}">Change password</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
-                                    </div>
-                                </div>
-                                <a class="nav-link" href="{% url 'initiate-payment' %}">NGN {{ user.account_balance }}</a>
-                            {% else %}
-                                <a href="{% url 'login' %}" class="nav-item nav-link">Login</a>
-                                <a href="{% url 'signup' %}" class="nav-item nav-link">Register</a>
-                                
-                            {% endif %}
-                            
-                            
+        <main>
+            <div id="preloader">            
+                <div class="preloader-inner">
+                    <i class="preloader-icon thm-clr flaticon-kaaba"></i>
+                </div>
+            </div><!-- Page Loader -->
+            <header class="stick style1 w-100">
+                <div class="topbar bg-color1 d-flex flex-wrap justify-content-center w-100">
+                    <ul class="topbar-info-list mb-0 list-unstyled d-inline-flex">
+                        {% if games_with_winning_numbers %}
+                       
+                        {% for game in games_with_winning_numbers %}
+                        <li><i class="thm-clr flaticon-sun"></i>{{ game.name }}: <span class="thm-clr">
+                            {% if game.winning_numbers == "0,0,0,0,0" %}
+                            Winning Numbers: <span>Pending</span>
+                        {% else %}
+                        {% with game.winning_numbers|join:", " as winning_numbers_str %}
+                        {% for number in winning_numbers_str|split:", " %}
+                            {{ number }}
+                        {% endfor %}
+                    {% endwith %}
+                    {% endif %}
+                    </span>
+                        </li>
+                        {% endfor %}
+                        {% else %}
+                        <li><i class="thm-clr flaticon-sun"></i>Game Starts: <span class="thm-clr">8:00am</span></li>
+                        <li><i class="thm-clr flaticon-moon"></i>Game Ends: <span class="thm-clr">8:00pm</span></li>
+                        {% endif %}
+                    </ul>
+                </div><!-- Topbar -->
+                <div class="logo-menu-wrap d-flex flex-wrap justify-content-between w-100">
+                    <div class="logo position-relative thm-layer opc7 back-blend-multiply thm-bg" style="background-image: url({% static 'img/pattern-bg.jpg' %});"><h1 class="mb-0"><a href="{% url 'home' %}" title="Home">Edeypay</a></h1></div><!-- Logo -->
+                    <nav class="d-flex flex-wrap align-items-center justify-content-center">
+                        <div class="header-left">
+                            <ul class="mb-0 list-unstyled d-inline-flex">
+                                <li><a href="{% url 'home' %}" title="">Home</a></li>
+                                <li><a href="{% url 'about' %}" title="">About</a></li>
+                            </ul>
                         </div>
-                    </div>
-                </nav>
-            </div>
-        </div>
-        <!-- Nav End -->
-        <br><br><br><br><br>
-        {% block content %}
-        
-
-        {% endblock %}
-        <br><br><br>
-        <!-- Footer Start -->
-        <div class="footer">
-            <div class="footer-top">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-3 col-md-6 footer-links">
-                            <h4>Links</h4>
-                            <ul>
-                                <li><i class="ion-ios-arrow-forward"></i> <a href="{% url 'home' %}">Home</a></li>
-                                <li><i class="ion-ios-arrow-forward"></i> <a href="{% url 'about' %}">About us</a></li>
-                                <li><i class="ion-ios-arrow-forward"></i> <a href="#">Our services</a></li>
-                                <li><i class="ion-ios-arrow-forward"></i> <a href="{% url 'terms' %}">Terms & condition</a></li>
-                                <li><i class="ion-ios-arrow-forward"></i> <a href="{% url 'privacy' %}">Privacy policy</a></li>
+                        {% if user.is_authenticated %}
+                        <div class="header-left">
+                            <ul class="mb-0 list-unstyled d-inline-flex">
+                                <li><a href="{% url 'play_lottery' %}">Play Lottery</a></li>
+                                <li><a href="{% url 'withdraw' %}">Withdraw</a></li>
                             </ul>
                         </div>
 
-                        
+                            <ul class="navbar-nav">
+                                <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ user.first_name }}
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                                    <a class="dropdown-item" href="{% url 'payment_history' %}">Payment History</a>
+                                    <a class="dropdown-item" href="{% url 'lottery_history' %}">Lottery History</a>
+                                    <a class="dropdown-item" href="{% url 'password_change' %}">Change password</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
+                                </div>
+                                </li>
+                            </ul>
+                        {% else %}
+                                <div class="header-left">
+                                    <ul class="mb-0 list-unstyled d-inline-flex">
+                                        
+                                        <li><a href="{% url 'login' %}" title="">Login</a></li>
+                                        <li><a href="{% url 'signup' %}" title="">Register</a></li>
+                                            
+                                        
+                                    </ul>
+                                </div>
+          
+                        {% endif %}
+                    </nav>
+                </div><!-- Logo Menu Wrap -->
+            </header><!-- Header -->
+            <div class="sticky-menu">
+                <div class="container">
+                    <div class="sticky-menu-inner d-flex flex-wrap align-items-center justify-content-between w-100">
+                        <div class="logo position-relative thm-layer opc7 back-blend-multiply thm-bg" style="background-image: url({% static 'img/pattern-bg.jpg' %});"><h1 class="mb-0"><a href="{% url 'home' %}" title="Home">Edeypay</a></h1></div><!-- Logo -->
+                        <nav class="d-flex flex-wrap align-items-center justify-content-between">
+                            <div class="header-left">
+                                <ul class="mb-0 list-unstyled d-inline-flex">
+                                    <li><a href="{% url 'home' %}" title="">Home</a></li>
+                                    <li><a href="{% url 'about' %}" title="">About</a></li>
+                                    {% if user.is_authenticated %}
+                                    <li><a href="{% url 'play_lottery' %}">Play Lottery</a></li>
+                                    <li><a href="{% url 'withdraw' %}">Withdraw</a></li>
 
-                        <div class="col-lg-3 col-md-6 footer-contact">
-                            <h4>Contact Us</h4>
-                            <p>
-                                1300  Center Avenue<br>
-                                Fresno, California<br>
-                                United States <br>
-                                <strong>Phone:</strong> +234 813 813 5912<br>
-                                <strong>Email:</strong> info@edeypay.money<br>
-                            </p>
-
-                            <div class="social-links">
-                                <a href="#"><i class="ion-logo-twitter"></i></a>
-                                <a href="#"><i class="ion-logo-facebook"></i></a>
-                                <a href="#"><i class="ion-logo-linkedin"></i></a>
-                                <a href="#"><i class="ion-logo-instagram"></i></a>
-                                <a href="#"><i class="ion-logo-googleplus"></i></a>
+                                    <li class="menu-item-has-children"><a href="javascript:void(0);" title="">{{ user.first_name }}</a>
+                                        <ul class="mb-0 list-unstyled">
+                                            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'payment_history' %}">Payment History</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'lottery_history' %}">Lottery History</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'password_change' %}">Change password</a></li>
+                                            <div class="dropdown-divider"></div>
+                                            <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
+                                        </ul>
+                                    </li>
+                                      {% else %}
+                                    <li class="menu-item-has-children"><a href="javascript:void(0);" title="">Authenticate</a>
+                                        <ul class="mb-0 list-unstyled">
+                                            <li><a href="{% url 'login' %}" title="">Login</a></li>
+                                            <li><a href="{% url 'signup' %}" title="">Register</a></li>
+                                        </ul>
+                                    </li>
+                                    {% endif %}  
+                                </ul>
                             </div>
-
-                        </div>
-
-                        <div class="col-lg-3 col-md-6 footer-newsletter">
-                            <h4>About Us</h4>
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type.</p>
-
-                        </div>
-
+                        </nav>
                     </div>
                 </div>
-            </div>
-
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-6 copyright">
-                        Copyright &copy; 2023 <a href="{% url 'home' %}">Edeypay</a>. All Rights Reserved
+            </div><!-- Sticky Menu -->
+            <div class="rspn-hdr">
+                <div class="rspn-mdbr">
+                    <div class="rspn-scil">
+                        <a href="https://twitter.com/" title="Twtiiter" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.youtube.com/" title="Youtube" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.linkedin.com/" title="Linkedin" target="_blank"><i class="fab fa-linkedin-in"></i></a>
                     </div>
-                    <div class="col-md-6 credit">
-						<!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                        Designed by <a href="https://htmlcodex.com">HTML Codex</a>
+                    <form class="rspn-srch">
+                        <input type="text" placeholder="Enter Your Keyword">
+                        <button type="submit"><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+                <div class="lg-mn">
+                    <div class="logo"><a href="{% url 'home' %}" title="Home">Edeypay</a></div>
+                    <div class="rspn-cnt">
+                        <span><i class="thm-clr far fa-envelope"></i><a href="javascript:void(0);" title="">info@edeypay.com</a></span>
+                        <span><i class="thm-clr fas fa-phone-alt"></i>+234 813 813 5912</span>
+                    </div>
+                    <span class="rspn-mnu-btn"><i class="fa fa-list-ul"></i></span>
+                </div>
+                <div class="rsnp-mnu">
+                    <span class="rspn-mnu-cls"><i class="fa fa-times"></i></span>
+                    <ul class="mb-0 list-unstyled w-100">
+                        <li><a href="{% url 'home' %}" title="">Home</a></li>
+                        <li><a href="{% url 'about' %}" title="">About</a></li>
+                        <li><a href="{% url 'play_lottery' %}">Play Lottery</a></li>
+                        <li><a href="{% url 'withdraw' %}">Withdraw</a></li>
+                        {% if user.is_authenticated %}
+                            <li class="menu-item-has-children"><a href="javascript:void(0);" title="">{{ user.first_name }}</a>
+                                <ul class="mb-0 list-unstyled">
+                                    <a href="{% url 'profile' %}">Profile</a>
+                                    <a href="{% url 'payment_history' %}">Payment History</a>
+                                    <a href="{% url 'lottery_history' %}">Lottery History</a>
+                                    <a href="{% url 'password_change' %}">Change password</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a href="{% url 'logout' %}">Log out</a>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li><a href="about.html" title="">About Us</a></li>
+                            <li><a href="contact.html" title="">Contact Us</a></li>
+                        {% endif %}
+                        
+                    </ul>
+                </div><!-- Responsive Menu -->
+            </div><!-- Responsive Header -->
+            <div class="container  pt-4 mt-5">
+                {% block content %}
+                {% endblock %}
+              </div>
+
+              <section>
+                <div class="w-100 pt-90 pb-200 position-relative">
+                    
                     </div>
                 </div>
-            </div>
-        </div>
-        <!-- Footer End -->
+            </section>
+            <footer>
+                <div class="w-100 pt-100 dark-layer pb-50 opc85 position-relative">
+                    <div class="fixed-bg patern-bg back-blend-multiply dark-bg" style="background-image: url({% static 'img/pattern-bg.jpg' %});"></div>
+                    <div class="container">
+                        <div class="footer-data w-100">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-lg-3">
+                                    <div class="widget w-100">
+                                        <div class="logo"><h1 class="mb-0"><a href="{% url 'home' %}" title="Home"><img class="img-fluid" src="{% static 'images/logo2.png' %}" alt="Logo" srcset="{% static 'images/retina-logo2.png' %}"></a></h1></div>
+                                        <p class="mb-0">Welcome to edeypay.money - Where Dreams Come True! At edeypay.money, we're more than just a lottery website; we're the gateway to turning your wildest dreams into reality. Our journey began with a simple yet powerful vision: to create a platform that not only entertains but also empowers individuals to seize their chance at life-changing fortunes.</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-lg-9">
+                                    <div class="row justify-content-between">
+                                        <div class="col-md-6 col-sm-6 col-lg-6">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6 col-lg-6">
+                                                    <div class="widget w-100">
+                                                        <h4 class="widget-title">Information</h4>
+                                                        <ul class="mb-0 list-unstyled w-100">
+                                                            <li><a href="{% url 'home' %}">Home</a></li>
+                                                            <li><a href="{% url 'about' %}">About us</a></li>
+                                                            <li><a href="#">Our services</a></li>
+                                                            <li><a href="{% url 'terms' %}">Terms & condition</a></li>
+                                                            <li><a href="{% url 'privacy' %}">Privacy policy</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6 col-lg-6">
+                                                    <div class="widget w-100">
+                                                        <h4 class="widget-title">Contact Info</h4>
+                                                        <ul class="cont-info-list2 mb-0 list-unstyled w-100">
+                                                            <li><i class="thm-clr">P:</i>+234 813 813 5912</li>
+                                                            <li><i class="thm-clr">E:</i><a href="javascript:void(0);" title="">info@edeypay.com</a></li>
+                                                            <li>Adejumo Street</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5 col-sm-6 col-lg-5">
+                                            <h4 class="widget-title">Let Us Help You</h4>
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6 col-lg-6">
+                                                    <div class="widget w-100">
+                                                        <ul class="mb-0 list-unstyled w-100">
+                                                            <li><a href="{% url 'about' %}" title="">About Us</a></li>
+                                                            
+                                                            <li><a href="#" title="">Our Services</a></li>
+                                                            
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6 col-lg-6">
+                                                    <div class="widget w-100">
+                                                        <ul class="mb-0 list-unstyled w-100">
+                                                            
+                                                            <li><a href="#" title="">Contact Us</a></li>
+                                                            <li><a href="#" title="">Gallery</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- Footer Data -->
+                    </div>
+                </div>
+            </footer><!-- Footer -->
+            <div class="bottom-bar dark-bg2 text-center w-100">
+                <p class="mb-0"><a href="{% url 'home' %}" title="Home">Edeypay</a> - Copyright 2023.</p>
+            </div><!-- Bottom Bar -->
+        </main><!-- Main Wrapper -->
 
-        <a href="#" class="back-to-top"><i class="ion-ios-arrow-up"></i></a>
-
-        <!-- Libraries JS -->
-        <script src="{% static 'lib/jquery/jquery.min.js' %}"></script>
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/popper.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/wow.min.js' %}"></script>
+        <script src="{% static 'js/counterup.min.js' %}"></script>
+        <script src="{% static 'js/jquery.fancybox.min.js' %}"></script>
+        <script src="{% static 'js/jquery.bootstrap-touchspin.min.js' %}"></script>
+        <script src="{% static 'js/perfect-scrollbar.min.js' %}"></script>
+        <script src="{% static 'js/slick.min.js' %}"></script>
+        <!-- <script src="{% static 'js/particles.min.js' %}"></script>
+        <script src="{% static 'js/particle-int.js' %}"></script> -->
+        <script src="{% static 'js/musicplayer-min.js' %}"></script>
+        <script src="{% static 'js/custom-scripts.js' %}"></script>
+        
+        
         <script src="{% static 'lib/jquery/jquery-migrate.min.js' %}"></script>
         <script src="{% static 'lib/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
         <script src="{% static 'lib/easing/easing.min.js' %}"></script>
         <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
-        <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
+        
         <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
         <script src="{% static 'lib/lightbox/js/lightbox.min.js' %}"></script>
 
@@ -158,5 +301,5 @@
         {% block scripts %}
         
         {% endblock %}
-    </body>
+    </body>	
 </html>

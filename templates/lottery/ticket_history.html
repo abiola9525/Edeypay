@@ -2,41 +2,44 @@
 
 {% block content %}
     <!--<a href="#"><button class="btn-primary">Claim your winning Price</button></a>-->
+  
     <h2 style="text-align: center;">Ticket History</h2>
-    <table class="table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Date</th>
-        <th>Numbers Played</th>
-        <th>Amount Played</th>
-        <th>Winning Numbers</th>
-        <th>Winnings</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for ticket in ticket_data %}
+    <div class="table-responsive">
+      <table class="table">
+      <thead>
         <tr>
-          <td>{{ ticket.name }}</td>
-          <td>{{ ticket.date }}</td>
-          <td>{{ ticket.numbers_played }}</td>
-          <td>{{ ticket.amount_played }}</td>
-          <td>
-            {% if ticket.winning_numbers == "0,0,0,0,0" %}
-              Pending
-            {% else %}
-              {{ ticket.winning_numbers }}
-            {% endif %}
-          </td>
-          <td>
-            {% if ticket.winnings == "Lose" and ticket.winning_numbers == "0,0,0,0,0" %}
-              Pending
-            {% else %}
-              {{ ticket.winnings }}
-            {% endif %}
-          </td>
+          <th>Name</th>
+          <th>Date</th>
+          <th>Numbers Played</th>
+          <th>Amount Played</th>
+          <th>Winning Numbers</th>
+          <th>Winnings</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for ticket in ticket_data %}
+          <tr>
+            <td>{{ ticket.name }}</td>
+            <td>{{ ticket.date }}</td>
+            <td>{{ ticket.numbers_played }}</td>
+            <td>{{ ticket.amount_played }}</td>
+            <td>
+              {% if ticket.winning_numbers == "0,0,0,0,0" %}
+                Pending
+              {% else %}
+                {{ ticket.winning_numbers }}
+              {% endif %}
+            </td>
+            <td>
+              {% if ticket.winnings == "Lose" and ticket.winning_numbers == "0,0,0,0,0" %}
+                Pending
+              {% else %}
+                {{ ticket.winnings }}
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% endblock %}
